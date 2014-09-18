@@ -1,0 +1,26 @@
+{
+  "name": "jmd5s",
+  "version": "0.0.3",
+  "homepage": "https://github.com/zswang/jmd5s",
+  "authors": [
+    "Zswang <wjhu111@21cn.com>"
+  ],
+  "description": "MD5 JS Library",
+  "main": "dist/jmd5s.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "md5",
+    "javascript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components",
+    "test",
+    "tests"
+  ]
+}
