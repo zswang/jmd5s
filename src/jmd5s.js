@@ -200,6 +200,8 @@ void function(exports) {
 
   /**
    * 进行 md5 编码
+   * @param{String} str 需要编码的字符串
+   * @return{String} 返回对应的 MD5 十六进制字符串
    */
   function encode(str) {
     str = encodeUTF8(str); // 处理 utf8 字符
