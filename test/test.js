@@ -1,7 +1,5 @@
 var assert = require('should');
 var jmd5s = require('..');
-var fs = require('fs');
-var util = require('util');
 
 var crypto = require('crypto');
 
