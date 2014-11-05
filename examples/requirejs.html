@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+  <title>jmd5s example</title>
+  <meta charset="utf-8">
+  <script src="../lib/requirejs/require.js"></script>
+  <script>
+require.config({
+  paths: {
+    jmd5s: '../jmd5s',
+    jhtmls: '../lib/jhtmls/jhtmls'
+  }
+});
+  </script>
+</head>
+<body>
+  <div></div>
+  <script>
+require(['jmd5s', 'jhtmls'], function(jmd5s, jhtmls) {
+  var log = document.querySelector('div');
+
+  var data = [];
+  for (var i = 0; i < 10; i++) {
+    var text = '汉字' + i;
+    data.push({
+      text: text,
+      md5: jmd5s.encode(text)
+    });
+  }
+  log.innerHTML = jhtmls.render(function() {/*!
+<ul>
+  forEach(function(item) {
+  <li><em>text:</em>$item.text  <em>md5:</em>$item.md5</li>
+  });
+<ul>
+  */}, data);
+});
+  </script>
+</body>
+</html>

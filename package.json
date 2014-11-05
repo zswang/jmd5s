@@ -2,7 +2,7 @@
   "name": "jmd5s",
   "title": "jmd5s",
   "description": "MD5 JS Library",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "homepage": "https://github.com/zswang/jmd5s",
   "main": "src/jmd5s.js",
   "author": {
@@ -23,14 +23,15 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "mocha": "*",
-    "should": "*",
-    "uglify-js": "*",
-    "jshint": "*"
+    "mocha": "2.0.1",
+    "should": "4.1.0",
+    "uglify-js": "2.4.15",
+    "jdists": "0.1.10",
+    "jshint": "2.5.8"
   },
   "scripts": {
   	"test": "mocha -R spec && npm run coverage",
-    "compress": "uglifyjs src/jmd5s.js -o dist/jmd5s.min.js --source-map dist/jmd5s.min.js.map --source-map-url jmd5s.min.js.map -p 5 -c -m",
+    "dist": "jdists src/jmd5s.js -o jmd5s.js && uglifyjs jmd5s.js -o jmd5s.min.js -p 5 -c -m",
     "lint": "jshint src/*.js *.json"
   }
 }

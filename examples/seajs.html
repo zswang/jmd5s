@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <title>jframes example</title>
+  <meta charset="utf-8">
+  <script src="../lib/seajs/dist/sea.js"></script>
+  <script>
+seajs.config({
+    base: '../'
+});
+  </script>
+</head>
+<body>
+  <div></div>
+  <script>
+define('start', function(require) {
+  var jmd5s = require('jmd5s');
+  var jhtmls = require('lib/jhtmls/jhtmls');
+
+  var log = document.querySelector('div');
+
+  var data = [];
+  for (var i = 0; i < 10; i++) {
+    var text = '汉字' + i;
+    data.push({
+      text: text,
+      md5: jmd5s.encode(text)
+    });
+  }
+  log.innerHTML = jhtmls.render(function() {/*!
+<ul>
+  forEach(function(item) {
+  <li><em>text:</em>$item.text  <em>md5:</em>$item.md5</li>
+  });
+<ul>
+  */}, data);
+});
+seajs.use('start');
+  </script>
+</body>
+</html>
