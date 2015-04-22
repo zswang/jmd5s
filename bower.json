@@ -1,12 +1,10 @@
 {
   "name": "jmd5s",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "https://github.com/zswang/jmd5s",
-  "authors": [
-    "Zswang <wjhu111@21cn.com>"
-  ],
+  "authors": "zswang",
   "description": "MD5 JS Library",
-  "main": "dist/jmd5s.js",
+  "main": "jmd5s.js",
   "moduleType": [
     "globals"
   ],
