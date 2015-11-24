@@ -1,6 +1,6 @@
 {
   "name": "jmd5s",
-  "version": "0.0.5",
+  "version": "0.0.13",
   "homepage": "https://github.com/zswang/jmd5s",
   "authors": "zswang",
   "description": "MD5 JS Library",

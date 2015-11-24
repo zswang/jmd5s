@@ -1,15 +1,31 @@
 (function(exportName) {
+  /*<remove>*/
   'use strict';
+  /*</remove>*/
 
+  /* global exports */
   var exports = exports || {};
 
+  /*<jdists encoding="ejs" data="../package.json">*/
   /**
-   * md5 封装，为了方便 bower 管理
-   * @author 王集鹄(wangjihu,http://weibo.com/zswang)
-   * @version 2014-09-18
+   * @file <%- name %>
+   *
+   * <%- description %>
+   * @author
+       <% (author instanceof Array ? author : [author]).forEach(function (item) { %>
+   *   <%- item.name %> (<%- item.url %>)
+       <% }); %>
+   * @version <%- version %>
+       <% var now = new Date() %>
    * @see https://github.com/zswang/jmd5s
    * @see https://github.com/wbond/md5-js
+   * @date <%- [
+        now.getFullYear(),
+        now.getMonth() + 101,
+        now.getDate() + 100
+      ].join('-').replace(/-1/g, '-') %>
    */
+  /*</jdists>*/
 
   /**
    * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
@@ -20,10 +36,17 @@
    * @see http://pajhome.org.uk/crypt/md5
    */
 
+  /*<jdists encoding="fndep" depend="encodeUTF8"
+    import="../node_modules/jstrs/jstrs.js">*/
+  var jstrs = require('jstrs');
+  var encodeUTF8 = jstrs.encodeUTF8;
+  /*</jdists>*/
+
+  /*<function name="encodeMD5" depend="encodeUTF8">*/
   /**
    * 每个字符占用的 bit 数
    */
-  var chrsz = 8;
+  var md5_chrsz = 8;
 
   function core_md5(x, len) {
     /* append padding */
@@ -159,9 +182,10 @@
 
   function str2binl(str) {
     var result = [];
-    var mask = (1 << chrsz) - 1;
-    for (var i = 0; i < str.length * chrsz; i += chrsz)
-      result[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << (i % 32);
+    var mask = (1 << md5_chrsz) - 1;
+    for (var i = 0; i < str.length * md5_chrsz; i += md5_chrsz) {
+      result[i >> 5] |= (str.charCodeAt(i / md5_chrsz) & mask) << (i % 32);
+    }
     return result;
   }
 
@@ -178,38 +202,25 @@
   }
 
   /**
-   * 对字符串进行 utf8 编码
-   *
-   * param {string} str 原始字符串
-   */
-  function encodeUTF8(str) {
-    return String(str).replace(
-      /[\u0080-\u07ff]/g,
-      function(c) {
-        var cc = c.charCodeAt(0);
-        return String.fromCharCode(0xc0 | cc >> 6, 0x80 | cc & 0x3f);
-      }
-    ).replace(
-      /[\u0800-\uffff]/g,
-      function(c) {
-        var cc = c.charCodeAt(0);
-        return String.fromCharCode(0xe0 | cc >> 12, 0x80 | cc >> 6 & 0x3f, 0x80 | cc & 0x3f);
-      }
-    );
-  }
-
-  /**
    * 进行 md5 编码
    *
    * @param {string} str 需要编码的字符串
    * @return {string} 返回对应的 MD5 十六进制字符串
+   '''<example>'''
+   * @example encode():base
+     ```js
+     console.log(jmd5s.encode('Hello'));
+     // > 8b1a9953c4611296a827abf8c47804d7
+     ```
+   '''</example>'''
    */
-  function encode(str) {
+  function encodeMD5(str) {
     str = encodeUTF8(str); // 处理 utf8 字符
-    return binl2hex(core_md5(str2binl(str), str.length * chrsz));
+    return binl2hex(core_md5(str2binl(str), str.length * md5_chrsz));
   }
+  /*</function>*/
 
-  exports.encode = encode;
+  exports.encode = encodeMD5;
 
   if (typeof define === 'function') {
     if (define.amd || define.cmd) {
@@ -217,11 +228,9 @@
         return exports;
       });
     }
-  }
-  else if (typeof module !== 'undefined' && module.exports) {
+  } else if (typeof module !== 'undefined' && module.exports) {
     module.exports = exports;
-  }
-  else {
+  } else {
     window[exportName] = exports;
   }
 

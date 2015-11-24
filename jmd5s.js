@@ -1,16 +1,17 @@
 (function(exportName) {
-  'use strict';
-
+  /* global exports */
   var exports = exports || {};
-
   /**
-   * md5 封装，为了方便 bower 管理
-   * @author 王集鹄(wangjihu,http://weibo.com/zswang)
-   * @version 2014-09-18
+   * @file jmd5s
+   *
+   * MD5 JS Library
+   * @author
+   *   zswang (http://weibo.com/zswang)
+   * @version 0.0.13
    * @see https://github.com/zswang/jmd5s
    * @see https://github.com/wbond/md5-js
+   * @date 2015-11-24
    */
-
   /**
    * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
    * Digest Algorithm, as defined in RFC 1321.
@@ -19,28 +20,44 @@
    * Distributed under the BSD License
    * @see http://pajhome.org.uk/crypt/md5
    */
-
+  /*<function name="encodeUTF8">*/
+  /**
+   * 对字符串进行 utf8 编码
+   *
+   * param {string} str 原始字符串
+   '''<example>'''
+   * @example encodeUTF8():base
+    ```js
+    console.log(jstrs.encodeUTF8('汉'));
+    // > æ±
+    ```
+   '''</example>'''
+   */
+  function encodeUTF8(str) {
+    if (/[\u0080-\uffff]/.test(str)) {
+      return unescape(encodeURIComponent(str));
+    }
+    return str;
+  }
+  /*</function>*/
+  /*<function name="encodeMD5" depend="encodeUTF8">*/
   /**
    * 每个字符占用的 bit 数
    */
-  var chrsz = 8;
-
+  var md5_chrsz = 8;
   function core_md5(x, len) {
     /* append padding */
     x[len >> 5] |= 0x80 << ((len) % 32);
     x[(((len + 64) >>> 9) << 4) + 14] = len;
-
     var a = 1732584193;
     var b = -271733879;
     var c = -1732584194;
     var d = 271733878;
-
     for (var i = 0; i < x.length; i += 16) {
       var olda = a;
       var oldb = b;
       var oldc = c;
       var oldd = d;
-
       a = md5_ff(a, b, c, d, x[i + 0], 7, -680876936);
       d = md5_ff(d, a, b, c, x[i + 1], 12, -389564586);
       c = md5_ff(c, d, a, b, x[i + 2], 17, 606105819);
@@ -57,7 +74,6 @@
       d = md5_ff(d, a, b, c, x[i + 13], 12, -40341101);
       c = md5_ff(c, d, a, b, x[i + 14], 17, -1502002290);
       b = md5_ff(b, c, d, a, x[i + 15], 22, 1236535329);
-
       a = md5_gg(a, b, c, d, x[i + 1], 5, -165796510);
       d = md5_gg(d, a, b, c, x[i + 6], 9, -1069501632);
       c = md5_gg(c, d, a, b, x[i + 11], 14, 643717713);
@@ -74,7 +90,6 @@
       d = md5_gg(d, a, b, c, x[i + 2], 9, -51403784);
       c = md5_gg(c, d, a, b, x[i + 7], 14, 1735328473);
       b = md5_gg(b, c, d, a, x[i + 12], 20, -1926607734);
-
       a = md5_hh(a, b, c, d, x[i + 5], 4, -378558);
       d = md5_hh(d, a, b, c, x[i + 8], 11, -2022574463);
       c = md5_hh(c, d, a, b, x[i + 11], 16, 1839030562);
@@ -91,7 +106,6 @@
       d = md5_hh(d, a, b, c, x[i + 12], 11, -421815835);
       c = md5_hh(c, d, a, b, x[i + 15], 16, 530742520);
       b = md5_hh(b, c, d, a, x[i + 2], 23, -995338651);
-
       a = md5_ii(a, b, c, d, x[i + 0], 6, -198630844);
       d = md5_ii(d, a, b, c, x[i + 7], 10, 1126891415);
       c = md5_ii(c, d, a, b, x[i + 14], 15, -1416354905);
@@ -108,7 +122,6 @@
       d = md5_ii(d, a, b, c, x[i + 11], 10, -1120210379);
       c = md5_ii(c, d, a, b, x[i + 2], 15, 718787259);
       b = md5_ii(b, c, d, a, x[i + 9], 21, -343485551);
-
       a = safe_add(a, olda);
       b = safe_add(b, oldb);
       c = safe_add(c, oldc);
@@ -116,30 +129,24 @@
     }
     return [a, b, c, d];
   }
-
   /*
    * These functions implement the four basic operations the algorithm uses.
    */
   function md5_cmn(q, a, b, x, s, t) {
     return safe_add(bit_rol(safe_add(safe_add(a, q), safe_add(x, t)), s), b);
   }
-
   function md5_ff(a, b, c, d, x, s, t) {
     return md5_cmn((b & c) | ((~b) & d), a, b, x, s, t);
   }
-
   function md5_gg(a, b, c, d, x, s, t) {
     return md5_cmn((b & d) | (c & (~d)), a, b, x, s, t);
   }
-
   function md5_hh(a, b, c, d, x, s, t) {
     return md5_cmn(b ^ c ^ d, a, b, x, s, t);
   }
-
   function md5_ii(a, b, c, d, x, s, t) {
     return md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
   }
-
   /*
    * Add integers, wrapping at 2^32. This uses 16-bit operations internally
    * to work around bugs in some JS interpreters.
@@ -149,24 +156,21 @@
     var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
     return (msw << 16) | (lsw & 0xffff);
   }
-
   /*
    * Bitwise rotate a 32-bit number to the left.
    */
   function bit_rol(num, cnt) {
     return (num << cnt) | (num >>> (32 - cnt));
   }
-
   function str2binl(str) {
     var result = [];
-    var mask = (1 << chrsz) - 1;
-    for (var i = 0; i < str.length * chrsz; i += chrsz)
-      result[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << (i % 32);
+    var mask = (1 << md5_chrsz) - 1;
+    for (var i = 0; i < str.length * md5_chrsz; i += md5_chrsz) {
+      result[i >> 5] |= (str.charCodeAt(i / md5_chrsz) & mask) << (i % 32);
+    }
     return result;
   }
-
   var hex_tab = '0123456789abcdef'.split('');
-
   function binl2hex(binarray) {
     var result = '';
     for (var i = 0; i < binarray.length * 4; i++) {
@@ -176,53 +180,34 @@
     }
     return result;
   }
-
-  /**
-   * 对字符串进行 utf8 编码
-   *
-   * param {string} str 原始字符串
-   */
-  function encodeUTF8(str) {
-    return String(str).replace(
-      /[\u0080-\u07ff]/g,
-      function(c) {
-        var cc = c.charCodeAt(0);
-        return String.fromCharCode(0xc0 | cc >> 6, 0x80 | cc & 0x3f);
-      }
-    ).replace(
-      /[\u0800-\uffff]/g,
-      function(c) {
-        var cc = c.charCodeAt(0);
-        return String.fromCharCode(0xe0 | cc >> 12, 0x80 | cc >> 6 & 0x3f, 0x80 | cc & 0x3f);
-      }
-    );
-  }
-
   /**
    * 进行 md5 编码
    *
    * @param {string} str 需要编码的字符串
    * @return {string} 返回对应的 MD5 十六进制字符串
+   '''<example>'''
+   * @example encode():base
+     ```js
+     console.log(jmd5s.encode('Hello'));
+     // > 8b1a9953c4611296a827abf8c47804d7
+     ```
+   '''</example>'''
    */
-  function encode(str) {
+  function encodeMD5(str) {
     str = encodeUTF8(str); // 处理 utf8 字符
-    return binl2hex(core_md5(str2binl(str), str.length * chrsz));
+    return binl2hex(core_md5(str2binl(str), str.length * md5_chrsz));
   }
-
-  exports.encode = encode;
-
+  /*</function>*/
+  exports.encode = encodeMD5;
   if (typeof define === 'function') {
     if (define.amd || define.cmd) {
       define(function() {
         return exports;
       });
     }
-  }
-  else if (typeof module !== 'undefined' && module.exports) {
+  } else if (typeof module !== 'undefined' && module.exports) {
     module.exports = exports;
-  }
-  else {
+  } else {
     window[exportName] = exports;
   }
-
 })('jmd5s');
